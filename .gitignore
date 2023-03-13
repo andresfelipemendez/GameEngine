@@ -1,0 +1,19 @@
+
+.vs
+# Visual Studio files
+*.sdf
+*.opensdf
+*.suo
+*.vcxproj.user
+*.vcxproj.filters
+*.pdb
+*.obj
+*.exe
+*.dll
+*.idb
+*.ipdb
+*.ilk
+Debug/
+Release/
+x64/
+*.vcxproj.*
