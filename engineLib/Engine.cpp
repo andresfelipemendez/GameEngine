@@ -13,7 +13,7 @@ Engine::Engine(ExecutableAllocator* allocator) :
 }
 
 Engine::~Engine() {
-
+	std::cout << "engine destructor" << std::endl;
 }
 
 void Engine::Init() {
@@ -44,10 +44,12 @@ void Engine::Init() {
 		glfwPollEvents();
 	}
 
-	glfwTerminate();
+	
 	return;
 }
 
 void Engine::Update() {}
 void Engine::Render() {}
-void Engine::Shutdown() {}
+void Engine::Shutdown() {
+	glfwTerminate();
+}

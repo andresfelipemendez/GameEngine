@@ -23,5 +23,5 @@ public:
 private:
 	ExecutableAllocator* m_allocator;
 
-	GLFWwindow* window;
+	GLFWwindow* window =  nullptr;
 };

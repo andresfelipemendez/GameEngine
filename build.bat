@@ -1,0 +1,1 @@
+msbuild GameEngine.sln /t:engineLib /p:Configuration=Debug /p:Platform=x64

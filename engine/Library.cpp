@@ -30,6 +30,7 @@ void reloadLibrary(HINSTANCE& lib, Engine* engine, void* engineMemory, Executabl
 
 				engine = new(engineMemory) Engine(&allocator);
 				lastWriteTime = fileInfo.ftLastWriteTime;
+				std::cerr << "reloaded library" << std::endl;
 			}
 
 		}
