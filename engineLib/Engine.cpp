@@ -23,7 +23,23 @@ void Engine::Init() {
 	if (!glfwInit())
 		return;
 
-	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+	int monitorCount;
+	GLFWmonitor** monitors = glfwGetMonitors(&monitorCount);
+
+	GLFWmonitor* leftmostMonitor = monitors[0];
+	int leftmostPos = INT_MAX;
+
+	for (int i = 0; i < monitorCount;++i)
+	{
+		int xpos, ypos;
+		glfwGetMonitorPos(monitors[i], &xpos, &ypos);
+		if (xpos < leftmostPos) {
+			leftmostPos = xpos;
+			leftmostMonitor = monitors[i];
+		}
+	} 
+
+	window = glfwCreateWindow(640, 480, "Hello World", leftmostMonitor, NULL);
 	if (!window)
 	{
 		glfwTerminate();
