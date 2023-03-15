@@ -13,6 +13,7 @@ struct GLFWwindow;
 class MYLIBRARY_API Engine
 {
 public:
+	GLFWwindow* window = nullptr;
 	Engine(ExecutableAllocator* allocator);
 	~Engine();
 
@@ -23,5 +24,4 @@ public:
 private:
 	ExecutableAllocator* m_allocator;
 
-	GLFWwindow* window =  nullptr;
 };

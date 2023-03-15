@@ -54,9 +54,11 @@ void Engine::Init() {
 
 
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+}
 
-	/* Loop until the user closes the window */
+void Engine::Update() 
+{
+	glClearColor(0.2f, 0.5f, 0.3f, 1.0f);
 	while (!glfwWindowShouldClose(window))
 	{
 		/* Render here */
@@ -68,13 +70,12 @@ void Engine::Init() {
 		/* Poll for and process events */
 		glfwPollEvents();
 	}
-
-	
-	return;
 }
 
-void Engine::Update() {}
-void Engine::Render() {}
+void Engine::Render() {
+
+}
+
 void Engine::Shutdown() {
-	glfwTerminate();
+	glfwTerminate();	
 }
