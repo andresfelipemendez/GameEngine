@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#if defined(_WIN32)
+    #define OS_WINDOWS
+    #include <windows.h>
+#elif defined(__unix__) || defined(__APPLE__)
+    #define OS_POSIX
+    #include <unistd.h>
+#endif
+
+int is_cmake_installed() {
+    #if defined(OS_WINDOWS)
+        return GetFileAttributes("C:\\Program Files\\CMake\\bin\\cmake.exe") != INVALID_FILE_ATTRIBUTES;
+    #elif defined(OS_POSIX)
+        return system("command -v cmake") == 0;
+    #endif
+}
+
+int main() {
+    if (is_cmake_installed()) {
+        printf("CMake is already installed.\n");
+    } else {
+        printf("CMake is not installed. Installing CMake...\n");
+
+        #if defined(OS_WINDOWS)
+            // Download and install CMake on Windows
+            int result = system("powershell -Command \""
+                "Invoke-WebRequest -Uri https://github.com/Kitware/CMake/releases/download/v3.22.1/cmake-3.22.1-windows-x86_64.msi -OutFile cmake-installer.msi;"
+                "Start-Process msiexec -Wait -ArgumentList '/i cmake-installer.msi /quiet /norestart';"
+                "Remove-Item cmake-installer.msi"
+                "\"");
+            if (result != 0) {
+                printf("Error installing CMake on Windows.\n");
+                return 1;
+            }
+        #elif defined(OS_POSIX)
+            // Install CMake on Unix-like systems
+            int result = system("sudo apt-get update && sudo apt-get install -y cmake");
+            if (result != 0) {
+                printf("Error installing CMake on Unix-like systems.\n");
+                return 1;
+            }
+        #endif
+
+        printf("CMake has been installed.\n");
+    }
+
+    return 0;
+}
