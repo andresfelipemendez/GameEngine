@@ -6,11 +6,11 @@
 #include <GL/gl.h>
 
 
-Engine::Engine(ExecutableAllocator* allocator) :
-	m_allocator(allocator)
+Engine::Engine()
 {
 	std::cout << "engine constructor" << std::endl;
 }
+
 
 Engine::~Engine() {
 	std::cout << "engine destructor" << std::endl;
@@ -23,23 +23,16 @@ void Engine::Init() {
 	if (!glfwInit())
 		return;
 
+	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+	glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
+
 	int monitorCount;
 	GLFWmonitor** monitors = glfwGetMonitors(&monitorCount);
-
-	GLFWmonitor* leftmostMonitor = monitors[0];
-	int leftmostPos = INT_MAX;
-
-	for (int i = 0; i < monitorCount;++i)
-	{
-		int xpos, ypos;
-		glfwGetMonitorPos(monitors[i], &xpos, &ypos);
-		if (xpos < leftmostPos) {
-			leftmostPos = xpos;
-			leftmostMonitor = monitors[i];
-		}
-	} 
-
-	const GLFWvidmode* mode = glfwGetVideoMode(leftmostMonitor);
+	GLFWmonitor* bottomMonitor = monitors[1];
+	int xpos, ypos;
+	glfwGetMonitorPos(bottomMonitor, &xpos, &ypos);
+		
+	const GLFWvidmode* mode = glfwGetVideoMode(bottomMonitor);
 	int monitorWidth = mode->width;
 	int monitorHeight = mode->height;
 
@@ -49,7 +42,7 @@ void Engine::Init() {
 		glfwTerminate();
 	}
 
-	glfwSetWindowPos(window, leftmostPos, 0);
+	glfwSetWindowPos(window, xpos, ypos);
 	glfwMakeContextCurrent(window);
 
 

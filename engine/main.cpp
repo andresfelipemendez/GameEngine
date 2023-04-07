@@ -2,12 +2,15 @@
 //
 
 #include <iostream>
-#include "Library.h"
+#include "Engine.h"
 
 int main()
 {
-   Library lib;
+   //Library lib;
    std::cout << "Hello World!\n";
+   Engine engine;
+   engine.Init();
+   engine.Update();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

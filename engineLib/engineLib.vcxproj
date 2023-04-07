@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\vcpkg.C.Users.fmend.vcpkg.1.0.0\build\native\vcpkg.C.Users.fmend.vcpkg.props" Condition="Exists('..\packages\vcpkg.C.Users.fmend.vcpkg.1.0.0\build\native\vcpkg.C.Users.fmend.vcpkg.props')" />
   <Import Project="..\packages\vcpkg.C.Users.andres.vcpkg.1.0.0\build\native\vcpkg.C.Users.andres.vcpkg.props" Condition="Exists('..\packages\vcpkg.C.Users.andres.vcpkg.1.0.0\build\native\vcpkg.C.Users.andres.vcpkg.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -153,12 +154,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Engine.h" />
     <ClInclude Include="ExecutableAllocator.h" />
     <ClInclude Include="framework.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Engine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -166,6 +163,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\vcpkg.C.Users.andres.vcpkg.1.0.0\build\native\vcpkg.C.Users.andres.vcpkg.targets" Condition="Exists('..\packages\vcpkg.C.Users.andres.vcpkg.1.0.0\build\native\vcpkg.C.Users.andres.vcpkg.targets')" />
+    <Import Project="..\packages\vcpkg.C.Users.fmend.vcpkg.1.0.0\build\native\vcpkg.C.Users.fmend.vcpkg.targets" Condition="Exists('..\packages\vcpkg.C.Users.fmend.vcpkg.1.0.0\build\native\vcpkg.C.Users.fmend.vcpkg.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -173,5 +171,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\vcpkg.C.Users.andres.vcpkg.1.0.0\build\native\vcpkg.C.Users.andres.vcpkg.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\vcpkg.C.Users.andres.vcpkg.1.0.0\build\native\vcpkg.C.Users.andres.vcpkg.props'))" />
     <Error Condition="!Exists('..\packages\vcpkg.C.Users.andres.vcpkg.1.0.0\build\native\vcpkg.C.Users.andres.vcpkg.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\vcpkg.C.Users.andres.vcpkg.1.0.0\build\native\vcpkg.C.Users.andres.vcpkg.targets'))" />
+    <Error Condition="!Exists('..\packages\vcpkg.C.Users.fmend.vcpkg.1.0.0\build\native\vcpkg.C.Users.fmend.vcpkg.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\vcpkg.C.Users.fmend.vcpkg.1.0.0\build\native\vcpkg.C.Users.fmend.vcpkg.props'))" />
+    <Error Condition="!Exists('..\packages\vcpkg.C.Users.fmend.vcpkg.1.0.0\build\native\vcpkg.C.Users.fmend.vcpkg.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\vcpkg.C.Users.fmend.vcpkg.1.0.0\build\native\vcpkg.C.Users.fmend.vcpkg.targets'))" />
   </Target>
 </Project>
