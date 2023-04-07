@@ -2,9 +2,9 @@
 
 #include <iostream>
 
-#include <GLFW/glfw3.h>
-#include <GL/gl.h>
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 Engine::Engine()
 {
@@ -28,7 +28,7 @@ void Engine::Init() {
 
 	int monitorCount;
 	GLFWmonitor** monitors = glfwGetMonitors(&monitorCount);
-	GLFWmonitor* bottomMonitor = monitors[1];
+	GLFWmonitor* bottomMonitor = monitors[2];
 	int xpos, ypos;
 	glfwGetMonitorPos(bottomMonitor, &xpos, &ypos);
 		
@@ -45,6 +45,10 @@ void Engine::Init() {
 	glfwSetWindowPos(window, xpos, ypos);
 	glfwMakeContextCurrent(window);
 
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+		fprintf(stderr,"Failed to initialize GLAD\n");
+
+	}
 
 	glEnable(GL_DEPTH_TEST);
 }
