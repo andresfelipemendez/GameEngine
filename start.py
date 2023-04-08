@@ -152,7 +152,9 @@ def main():
 	set_vcpkg_root()
 	cmake_build()
 
-	watch_folder('.',observers=[CmakeBuild(), ProcessRestarter("GameEngine.exe")])
+	watch_folder('launcher',observers=[CmakeBuild(), ProcessRestarter("GameEngine.exe")])
+	watch_folder('engine',observers=[CmakeBuild()])
+
 	# watch_folder('launcher',observers=[CmakeBuild(), ProcessRestarter("GameEngine.exe")])
 	# watch_folder('engine',observers=[CmakeBuild(), ProcessRestarter("GameEngine.exe")])
 
