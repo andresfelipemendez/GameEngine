@@ -52,27 +52,28 @@ def set_vcpkg_root():
 		print("vcpkg is not installed or not in PATH.")
 
 def debounce(wait):
-    def decorator(fn):
-        def debounced(*args, **kwargs):
-            def call_it():
-                fn(*args, **kwargs)
+	def decorator(fn):
+		def debounced(*args, **kwargs):
+			def call_it():
+				fn(*args, **kwargs)
 
-            if debounced._timer is not None:
-                debounced._timer.cancel()
+			if debounced._timer is not None:
+				debounced._timer.cancel()
 
-            debounced._timer = threading.Timer(wait, call_it)
-            debounced._timer.start()
+			debounced._timer = threading.Timer(wait, call_it)
+			debounced._timer.start()
 
-        debounced._timer = None
-        return debounced
+		debounced._timer = None
+		return debounced
 
-    return decorator
+	return decorator
 
 class FileChangeHandler(FileSystemEventHandler):
-	def __init__(self):
-		self.process = None
-		self.start_executable()
-
+	def __init__(self, observers=[]):
+		self.observers = observers
+		for observer in self.observers:
+				observer.start()
+		
 	@debounce(wait=1.0)
 	def on_any_event(self, event):
 		if event.is_directory:
@@ -80,27 +81,11 @@ class FileChangeHandler(FileSystemEventHandler):
 		file_extension = os.path.splitext(event.src_path)[-1]
 		if file_extension in ['.c', '.h']:
 			print(f"File with extension {file_extension} changed: {event.src_path}")
+			for observer in self.observers:
+				observer.update()
 
-			if self.process and self.process.poll() is None:
-				self.process.terminate()
-				self.process.wait()
-				print("Terminated running process.")
-
-			cmake_build()
-			self.start_executable()
-
-	def start_executable(self):
-		executable_path = os.path.join(build_folder_name, 'Debug','GameEngine.exe');
-		if(os.path.exists(executable_path)):
-			self.process = subprocess.Popen([executable_path])
-			print("Started the build executable.")
-		else:
-			print("Executable not found.")
-
-
-
-def watch_folder(folder_to_watch):
-	event_handler = FileChangeHandler()
+def watch_folder(folder_to_watch, observers=[]):
+	event_handler = FileChangeHandler(observers)
 	observer = Observer()
 	observer.schedule(event_handler, folder_to_watch, recursive=True)
 	observer.start()
@@ -113,6 +98,44 @@ def watch_folder(folder_to_watch):
 		observer.stop()
 
 	observer.join()
+
+class Updatable:
+	def start(self):
+		pass
+	def update(self):
+		pass
+
+class ProcessRestarter(Updatable):
+	def __init__(self,process_name):
+		self.process_name = process_name
+		self.executable_path = os.path.join(build_folder_name, 'Debug', self.process_name);
+		self.process = None
+
+	def start(self):
+		self.start_executable()
+
+	def update(self):
+		self.stop_executable()
+		self.start_executable()
+
+	def stop_executable(self):
+		if self.process and self.process.poll() is None:
+			self.process.terminate()
+			self.process.wait()
+
+	def start_executable(self):
+		if(os.path.exists(self.executable_path)): # is this if necessary? every time? maybe 
+			self.process = subprocess.Popen([self.executable_path])
+			print("Started the build executable.")
+		else:
+			print("Executable not found.")
+
+class CmakeBuild(Updatable):
+	def start(self):
+		pass
+
+	def update(self):
+		pass
 
 def main():
 	if is_cmake_installed():
@@ -128,7 +151,10 @@ def main():
 	create_build_folder()
 	set_vcpkg_root()
 	cmake_build()
-	watch_folder('.')
+
+	watch_folder('.',observers=[CmakeBuild(), ProcessRestarter("GameEngine.exe")])
+	# watch_folder('launcher',observers=[CmakeBuild(), ProcessRestarter("GameEngine.exe")])
+	# watch_folder('engine',observers=[CmakeBuild(), ProcessRestarter("GameEngine.exe")])
 
 if __name__ == "__main__":
 	main()
