@@ -6,29 +6,34 @@ Development Environment
 
 Run the start script with `start.py.`
 
-Use venv to manage script dependencies:
+Use `venv` to manage script dependencies:
 ```powershell
 python -m venv game_engine
 pip install -r requirements.txt
 python start.py.
 ```
 
-To develop the start script, use nodemon --exec python start.py.
+To develop the start script use nodemon:
 ```powershell
-nodemon --exec 
+nodemon --exec python start.py.
 ```
 
- - The project no longer uses Visual Studio as it doesn't allow me to compile a library while it's in use. I might switch to using RebedyBG instead.
+ - The project no longer uses Visual Studio as it doesn't allow me to compile a library while it's in use. I might switch to using [RebedyBG](https://remedybg.handmade.network) instead.
 The plan is to have a file watcher that auto-compiles on save and reloads the game engine library at runtime.
  - I aim to make the python script cross-platform
  - Create a file watcher to build when a file changes.
  - If the changed file belongs to a lib, reload that lib.
  - If the file changed is the "front end" executable, reload that.
 
-To-Do
-
- - [ ] Check if CMake is installed. If not, install it.
+## To-Do
+ - [x] Check if CMake is installed. 
+    - [ ] If not, install it.
  - [ ] Check Visual Studio installation.
- - [ ] Check Vcpkg installation and env variables.
+ - [x] Check Vcpkg installation
+    - [ ] If not, install it.
  - [ ] Make the project cross-platform. Switch between Windows, Linux, and Mac.
- - [ ] Create an env file to set the paths to these tools.
+    - [x] Windows
+    - [ ] Linux
+    - [ ] OSX
+ - [ ] Create an env file to manyally set the paths to these tools.
+    - [ ] 
