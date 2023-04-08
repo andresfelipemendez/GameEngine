@@ -1,6 +1,7 @@
 import os
 import subprocess
 import time
+import threading
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
@@ -50,11 +51,29 @@ def set_vcpkg_root():
 	except subprocess.CalledProcessError:
 		print("vcpkg is not installed or not in PATH.")
 
+def debounce(wait):
+    def decorator(fn):
+        def debounced(*args, **kwargs):
+            def call_it():
+                fn(*args, **kwargs)
+
+            if debounced._timer is not None:
+                debounced._timer.cancel()
+
+            debounced._timer = threading.Timer(wait, call_it)
+            debounced._timer.start()
+
+        debounced._timer = None
+        return debounced
+
+    return decorator
+
 class FileChangeHandler(FileSystemEventHandler):
 	def __init__(self):
 		self.process = None
 		self.start_executable()
 
+	@debounce(wait=1.0)
 	def on_any_event(self, event):
 		if event.is_directory:
 			return
