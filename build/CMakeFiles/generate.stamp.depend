@@ -13,6 +13,7 @@ C:/Program Files/CMake/share/cmake-3.21/Modules/CheckIncludeFile.cmake
 C:/Program Files/CMake/share/cmake-3.21/Modules/CheckLibraryExists.cmake
 C:/Program Files/CMake/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake
 C:/Program Files/CMake/share/cmake-3.21/Modules/Compiler/MSVC-C.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/FindOpenGL.cmake
 C:/Program Files/CMake/share/cmake-3.21/Modules/FindPackageHandleStandardArgs.cmake
 C:/Program Files/CMake/share/cmake-3.21/Modules/FindPackageMessage.cmake
 C:/Program Files/CMake/share/cmake-3.21/Modules/FindThreads.cmake
