@@ -1,78 +1,71 @@
-import subprocess
 import os
+import subprocess
 import time
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
+build_folder_name = "build"
+
 def is_cmake_installed():
     try:
-        output = subprocess.check_output(['cmake', '--version'])
+        subprocess.check_output(['cmake', '--version'])
         return True
     except FileNotFoundError:
         return False
 
-
-def id_vcpkg_installed():
+def is_vcpkg_installed():
     try:
-        output = subprocess.check_output(['vcpkg', '--version'])
+        subprocess.check_output(['vcpkg', '--version'])
         return True
     except FileNotFoundError:
         return False
 
-print("this is the first script you should run")
-
-if is_cmake_installed():
-    print("found cmake")
-else:
-    print("need to install cmake")
-
-buildFolderName = "build"
-if not os.path.exists(buildFolderName):
-    os.makedirs(buildFolderName)
-    print(f"Creater folder '{buildFolderName}'.")
-else:
-    print(f"folder '{buildFolderName}' already exists.")
+def create_build_folder():
+    if not os.path.exists(build_folder_name):
+        os.makedirs(build_folder_name)
+        print(f"Created folder '{build_folder_name}'.")
+    else:
+        print(f"Folder '{build_folder_name}' already exists.")
 
 def cmake_build():
-	try:
-	    subprocess.check_call(['cmake', '-S', '.', '-B', buildFolderName])
-	    print("CMake configuration completed.")
-	except FileNotFoundError:
-	    print ("CMake not found?")
+    try:
+        subprocess.check_call(['cmake', '-S', '.', '-B', build_folder_name])
+        print("CMake configuration completed.")
+    except FileNotFoundError:
+        print("CMake not found.")
 
-try:
-    output = subprocess.check_output(['where.exe', 'vcpkg'])
-    vcpkg_path = output.decode('utf-8').strip().splitlines()[0]
-    vcpkg_root = os.path.dirname(vcpkg_path)
-    os.environ['VCPKG_ROOT'] = vcpkg_root
-    print(f"vcpkg root is '{vcpkg_root}'")
-except subprocess.CalledProcessError:
-    print("vcpkg is not installed or not in PATH.")
+    try:
+        subprocess.check_call(['cmake', '--build', build_folder_name])
+        print("CMake build completed.")
+    except FileNotFoundError:
+        print("Something failed building with CMake.")
 
-cmake_build()
-
-try:
-    subprocess.check_call(['cmake', '--build', buildFolderName])
-    print("CMake build completed.")
-except FileNotFoundError:
-    print("something failed buildign with cmake")
-
+def set_vcpkg_root():
+    try:
+        output = subprocess.check_output(['where.exe', 'vcpkg'])
+        vcpkg_path = output.decode('utf-8').strip().splitlines()[0]
+        vcpkg_root = os.path.dirname(vcpkg_path)
+        os.environ['VCPKG_ROOT'] = vcpkg_root
+        print(f"vcpkg root is '{vcpkg_root}'")
+    except subprocess.CalledProcessError:
+        print("vcpkg is not installed or not in PATH.")
 
 class FileChangeHandler(FileSystemEventHandler):
     def on_any_event(self, event):
         if event.is_directory:
             return
         file_extension = os.path.splitext(event.src_path)[-1]
-        if(file_extension in ['.c', '.h']):
-        	print(f"File with extension {file_extension} changed: {event.src_path}")
-        	cmake_build()
-        
+        if file_extension in ['.c', '.h']:
+            print(f"File with extension {file_extension} changed: {event.src_path}")
+            cmake_build()
+
 def watch_folder(folder_to_watch):
     event_handler = FileChangeHandler()
     observer = Observer()
     observer.schedule(event_handler, folder_to_watch, recursive=True)
     observer.start()
     print(f"Watching folder: {folder_to_watch}")
+
     try:
         while True:
             time.sleep(1)
@@ -81,11 +74,21 @@ def watch_folder(folder_to_watch):
 
     observer.join()
 
+def main():
+    if is_cmake_installed():
+        print("Found CMake")
+    else:
+        print("Need to install CMake")
+        return
 
-watch_folder('.')
+    if not is_vcpkg_installed():
+        print("vcpkg not found or not in PATH.")
+        return
 
-# build exe
-# build lib
-# launch exe
-# start watching the directory for changes
-# if the exe file change compile and launch again
+    create_build_folder()
+    set_vcpkg_root()
+    cmake_build()
+    watch_folder('.')
+
+if __name__ == "__main__":
+    main()
