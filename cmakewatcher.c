@@ -13,14 +13,6 @@ int main(int argc, char const *argv[])
 {
 	int result;
 
-	// TODO: check if cmake is installed
-	// if its not installed install it?
-
-	// TODO: check visual studio installation?
-	// TODO: check vcpkg installation? and env variables?
-	// TODO: make crossplatform? switch between windows linux and mac?
-	// TODO: make an env file to set the paths to these tools?
-
 	printf("Creating build directory...\n");
 	result = system("mkdir build");
 	if(result != 0) {
@@ -43,13 +35,6 @@ int main(int argc, char const *argv[])
 		perror("chdir() error");
 		return 1;
 	}
-
-	// printf("Entering build directory...\n");
-	// result = system("cd build");
-	// if(result != 0) {
-	// 	printf("Error entering build directory.\n");
-	// 	return 1;
-	// }
 
 	printf("Running CMake...\n");
 	result = system("cmake -G \"Visual Studio 17 2022\" -A x64 -DCMAKE_TOOLCHAIN_FILE=\"~/vcpkg/scripts/buildsystems/vcpkg.cmake\" ..");
